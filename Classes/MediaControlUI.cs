@@ -31,6 +31,9 @@ namespace GorillaMedia
         public float maxSliderProgress;
         public Vector3 uiScale;
 
+        private bool isMenuToggledOpen = false;
+        private bool wasJoystickClicked = false;
+
         public void Awake()
         {
             instance = this;
@@ -126,12 +129,33 @@ namespace GorillaMedia
             transform.position += transform.forward * 0.1f;
             transform.Rotate(0, 180f, 0);
 
-            bool shouldGrow = Vector3.Distance(GorillaTagger.Instance.headCollider.transform.position, activeHand.position) < 0.7f
-               && Vector3.Angle(GorillaTagger.Instance.headCollider.transform.forward, (activeHand.position - GorillaTagger.Instance.headCollider.transform.position).normalized) < 30f
-               && (Vector3.Dot(
-                    GorillaTagger.Instance.headCollider.transform.forward.normalized,
-                    rightHand ? handTransform.right.normalized : -handTransform.right.normalized
-                  ) > 0.7f);
+            bool shouldGrow = false;
+
+            if (ConfigManager.OpenMethod.Value == "Joystick Click")
+            {
+                bool isClicking = false;
+                if (rightHand)
+                    UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand).TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out isClicking);
+                else
+                    UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand).TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out isClicking);
+                
+                if (isClicking && !wasJoystickClicked)
+                {
+                    isMenuToggledOpen = !isMenuToggledOpen;
+                }
+                wasJoystickClicked = isClicking;
+
+                shouldGrow = isMenuToggledOpen;
+            }
+            else
+            {
+                shouldGrow = Vector3.Distance(GorillaTagger.Instance.headCollider.transform.position, activeHand.position) < 0.7f
+                   && Vector3.Angle(GorillaTagger.Instance.headCollider.transform.forward, (activeHand.position - GorillaTagger.Instance.headCollider.transform.position).normalized) < 30f
+                   && (Vector3.Dot(
+                        GorillaTagger.Instance.headCollider.transform.forward.normalized,
+                        rightHand ? handTransform.right.normalized : -handTransform.right.normalized
+                      ) > 0.7f);
+            }
 
             transform.localScale = Vector3.Lerp(transform.localScale, shouldGrow ? uiScale : Vector3.zero, Time.deltaTime * 15f);
             canvas.gameObject.SetActive(transform.localScale.magnitude > 0.005f);
@@ -209,8 +233,7 @@ namespace GorillaMedia
                 bool rightHand = ConfigManager.HandChoice.Value == "Right";
                 var activeHand = rightHand ? TrueRightHand() : TrueLeftHand();
 
-                bool shouldGrow = Vector3.Distance(GorillaTagger.Instance.headCollider.transform.position, activeHand.position) < 0.7f
-                                  && Vector3.Angle(GorillaTagger.Instance.headCollider.transform.forward, (activeHand.position - GorillaTagger.Instance.headCollider.transform.position).normalized) < 30f;
+                bool shouldGrow = instance.transform.localScale.magnitude > 0.005f;
 
                 string targetCollider = rightHand ? "LeftHandTriggerCollider" : "RightHandTriggerCollider";
 
