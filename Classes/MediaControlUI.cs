@@ -131,13 +131,9 @@ namespace GorillaMedia
 
             bool shouldGrow = false;
 
-            if (ConfigManager.OpenMethod.Value == "Joystick Click")
+            if (ConfigManager.OpenMethod.Value == "Button Click")
             {
-                bool isClicking = false;
-                if (rightHand)
-                    UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand).TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out isClicking);
-                else
-                    UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand).TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxisClick, out isClicking);
+                bool isClicking = rightHand ? ControllerInputPoller.instance.rightControllerPrimaryButton : ControllerInputPoller.instance.leftControllerPrimaryButton;
                 
                 if (isClicking && !wasJoystickClicked)
                 {
