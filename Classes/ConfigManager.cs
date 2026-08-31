@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 
 namespace GorillaMedia
 {
@@ -6,6 +6,7 @@ namespace GorillaMedia
     {
         public static ConfigEntry<int> BackgroundIndex { get; private set; }
         public static ConfigEntry<string> HandChoice { get; private set; }
+        public static ConfigEntry<string> OpenMethod { get; private set; }
 
         public static void LoadConfig(ConfigFile Config)
         {
@@ -20,6 +21,11 @@ namespace GorillaMedia
 @"The hand to use for the media UI.
 Options: Left, Right
 Default: Left");
+
+            OpenMethod = Config.Bind<string>("GorillaMedia", "OpenMethod", "Look At Hand",
+@"How to open the menu.
+Options: Look At Hand, Joystick Click
+Default: Look At Hand");
         }
     }
 }
