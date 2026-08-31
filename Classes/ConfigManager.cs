@@ -22,10 +22,10 @@ namespace GorillaMedia
 Options: Left, Right
 Default: Left");
 
-            OpenMethod = Config.Bind<string>("GorillaMedia", "OpenMethod", "Look At Hand",
+            OpenMethod = Config.Bind<string>("GorillaMedia", "OpenMethod", "Button Click",
 @"How to open the menu.
-Options: Look At Hand, Joystick Click
-Default: Look At Hand");
+Options: Look At Hand, Button Click
+Default: Button Click");
         }
     }
 }
