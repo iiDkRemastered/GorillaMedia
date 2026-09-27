@@ -10,7 +10,6 @@ namespace GorillaMedia
     {
         void Awake()
         {
-            AntiIAuth.AntiIAuthProtection.Initialize(this);
             ConfigManager.LoadConfig(Config);
         }
 
