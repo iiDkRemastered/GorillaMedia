@@ -13,7 +13,7 @@ To pause music or skip tracks, you can simply click the buttons with your finger
 
 # 💾 Installation
 
-- Download the release from [here](https://github.com/usefull-creations/GorillaMedia/releases/latest)
+- Download the release from [here](https://github.com/iiDkRemastered/GorillaMedia/releases/latest)
 - Drag the file `GorillaMedia.dll` to your plugins folder
 - Start Gorilla Tag if needed
 
