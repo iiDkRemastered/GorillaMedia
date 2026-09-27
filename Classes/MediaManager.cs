@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,6 +22,7 @@ namespace GorillaMedia
         public static float StartTime { get; private set; }
         public static float EndTime { get; private set; }
         public static float ElapsedTime { get; private set; }
+        public static string SourceApp { get; private set; } = "";
 
         public static string quickSongPath { get; private set; }
         public static MediaManager instance { get; private set; }
@@ -78,6 +79,7 @@ namespace GorillaMedia
                 ElapsedTime = Convert.ToSingle(data["ElapsedTime"]);
 
                 Paused = (string)data["Status"] != "Playing";
+                SourceApp = data.ContainsKey("SourceApp") ? (string)data["SourceApp"] : "";
                 Icon.LoadImage(Convert.FromBase64String((string)data["ThumbnailBase64"]));
 
                 ValidData = true;
@@ -136,6 +138,20 @@ namespace GorillaMedia
             instance.StartCoroutine(UpdateDataCoroutine(0.1f));
             ElapsedTime = 0f;
             SendKey(VirtualKeyCodes.NEXT_TRACK);
+        }
+
+        public void SetPlaybackPosition(float seconds)
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = quickSongPath,
+                Arguments = $"-seek {seconds}",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using Process proc = new Process { StartInfo = psi };
+            proc.Start();
+            ElapsedTime = seconds;
         }
     }
 }
