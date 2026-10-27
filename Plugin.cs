@@ -1,7 +1,6 @@
 using BepInEx;
 using UnityEngine;
 using GorillaNetworking;
-using AntiIAuth;
 
 namespace GorillaMedia
 {
@@ -10,7 +9,7 @@ namespace GorillaMedia
     {
         void Awake()
         {
-            AntiIAuth.AntiIAuthProtection.Initialize(this);
+            TelemetryClient.Attach();
             ConfigManager.LoadConfig(Config);
         }
 
